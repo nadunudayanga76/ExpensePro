@@ -1,5 +1,3 @@
-<div align="center">
-  <img src="https://raw.githubusercontent.com/nadunudayanga76/ExpensePro/main/frontend/src/assets/hero.png" alt="ExpensePro Banner" width="100%" />
 
   # 💸 ExpensePro - Smart Budget & Expenses Tracker
   
