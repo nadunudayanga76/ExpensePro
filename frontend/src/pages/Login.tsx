@@ -47,9 +47,34 @@ const Login = () => {
     }
   });
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    showToast('Email login is currently disabled. Please use "Continue with Google".', 'error');
+    if (!email || !password) {
+      showToast('Please enter your email and password.', 'error');
+      return;
+    }
+
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok) {
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('token', data.token); // Store JWT
+        localStorage.setItem('user', JSON.stringify(data.user)); // Store user info
+        navigate('/');
+      } else {
+        showToast(data.error || 'Login failed', 'error');
+      }
+    } catch (err) {
+      showToast('Network error during login', 'error');
+      console.error(err);
+    }
   };
 
   return (

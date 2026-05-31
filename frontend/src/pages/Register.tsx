@@ -46,9 +46,35 @@ const Register = () => {
     }
   });
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    showToast('Email registration is currently disabled. Please use "Continue with Google".', 'error');
+    if (!name || !email || !password) {
+      showToast('Please fill in all fields.', 'error');
+      return;
+    }
+
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok) {
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('token', data.token); // Store JWT
+        localStorage.setItem('user', JSON.stringify(data.user)); // Store user info
+        showToast('Registration successful!', 'success');
+        navigate('/');
+      } else {
+        showToast(data.error || 'Registration failed', 'error');
+      }
+    } catch (err) {
+      showToast('Network error during registration', 'error');
+      console.error(err);
+    }
   };
 
   return (
