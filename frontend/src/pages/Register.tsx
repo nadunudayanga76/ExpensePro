@@ -3,10 +3,11 @@ import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 
-import toast from 'react-hot-toast';
+import { useToast } from '../components/ToastProvider';
 
 const Register = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,26 +32,23 @@ const Register = () => {
           localStorage.setItem('user', JSON.stringify(data.user)); // Store user info
           navigate('/');
         } else {
-          toast.error('Google login failed');
+          showToast('Google login failed', 'error');
           console.error('Google login failed on backend:', data.error);
         }
       } catch (err) {
-        toast.error('Network error during login');
+        showToast('Network error during login', 'error');
         console.error('Network error during Google login:', err);
       }
     },
     onError: errorResponse => {
-      toast.error('Google Login Error');
+      showToast('Google Login Error', 'error');
       console.log('Google Login Error:', errorResponse);
     }
   });
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.error('Email registration is currently disabled. Please use "Continue with Google".', {
-      duration: 4000,
-      icon: '🔒'
-    });
+    showToast('Email registration is currently disabled. Please use "Continue with Google".', 'error');
   };
 
   return (
