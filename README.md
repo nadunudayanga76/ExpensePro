@@ -20,6 +20,15 @@ Whether you're managing multiple wallets, tracking monthly budgets, or looking f
 
 ---
 
+## 📸 Screenshots
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/nadunudayanga76/ExpensePro/main/frontend/src/assets/dashboard-preview.png" alt="ExpensePro Dashboard" width="90%" style="border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.5);" />
+  <p><em>The intuitive and beautiful dark-themed dashboard.</em></p>
+</div>
+
+---
+
 ## ✨ Key Features
 
 * 📊 **Comprehensive Dashboard:** Get a bird's-eye view of your total net worth, monthly income, expenses, and savings.
