@@ -119,12 +119,19 @@
   padding: 0;
 }
 
+html, body {
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   background-color: var(--bg-dark);
   color: var(--text-primary);
   line-height: 1.5;
-  min-height: 100vh;
 }
 
 /* Smooth scrolling */
@@ -644,7 +651,8 @@ option {
   }
   .sidebar {
     width: 100%;
-    height: 70px;
+    height: calc(70px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     border-right: none;
     border-top: 1px solid var(--border-color);
     flex-direction: row;
