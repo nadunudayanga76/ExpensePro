@@ -141,6 +141,7 @@ html { scroll-behavior: smooth; }
 .app-container {
   display: flex;
   height: 100vh;
+  height: 100dvh;
   overflow: hidden;
 }
 

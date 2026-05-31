@@ -324,27 +324,28 @@ const Dashboard = () => {
             return (
               <div key={exp._id} className="flex justify-between items-center" style={{ 
                 padding: '1.25rem 0', 
-                borderBottom: index < Math.min(expenses.length - 1, 5) ? '1px solid rgba(255,255,255,0.03)' : 'none' 
+                borderBottom: index < Math.min(expenses.length - 1, 5) ? '1px solid rgba(255,255,255,0.03)' : 'none',
+                gap: '1rem' 
               }}>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4" style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ 
                     width: '42px', height: '42px', borderRadius: '10px', 
                     backgroundColor: exp.type === 'income' ? 'rgba(16, 185, 129, 0.15)' : `${catColor}15`, 
-                    display: 'flex', alignItems: 'center', justifyContent: 'center' 
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
                   }}>
                     {exp.type === 'income' 
                       ? <ArrowDownRight size={20} color="#10b981" />
                       : <IconMap name={exp.categoryId?.icon || 'help-circle'} size={20} color={catColor} />
                     }
                   </div>
-                  <div>
-                    <h4 style={{ margin: '0 0 0.3rem 0', fontSize: '0.95rem', fontWeight: 600 }}>{exp.notes || exp.categoryId?.name || (exp.type === 'income' ? 'Income' : 'Unknown')}</h4>
-                    <div className="flex items-center gap-2" style={{ color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>
-                      {new Date(exp.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <h4 style={{ margin: '0 0 0.3rem 0', fontSize: '0.95rem', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{exp.notes || exp.categoryId?.name || (exp.type === 'income' ? 'Income' : 'Unknown')}</h4>
+                    <div className="flex items-center gap-2" style={{ color: 'var(--text-tertiary)', fontSize: '0.8rem', flexWrap: 'wrap' }}>
+                      <span style={{ whiteSpace: 'nowrap' }}>{new Date(exp.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
                       {exp.walletId && (
                         <>
                           <span style={{ color: 'var(--text-tertiary)' }}>•</span>
-                          <span>{exp.walletId.name}</span>
+                          <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '80px' }}>{exp.walletId.name}</span>
                         </>
                       )}
                       <span style={{ color: 'var(--text-tertiary)' }}>•</span>
@@ -354,14 +355,15 @@ const Dashboard = () => {
                         padding: '2px 8px', 
                         borderRadius: 'var(--radius-full)', 
                         fontSize: '0.75rem',
-                        fontWeight: 500
+                        fontWeight: 500,
+                        whiteSpace: 'nowrap'
                       }}>
                         {exp.type === 'income' ? 'Income' : (exp.categoryId?.name || 'Unknown')}
                       </span>
                     </div>
                   </div>
                 </div>
-                <div className="currency-text" style={{ fontSize: '1.05rem', fontWeight: 600, color: exp.type === 'income' ? '#10b981' : 'var(--text-primary)' }}>
+                <div className="currency-text" style={{ fontSize: '1.05rem', fontWeight: 600, color: exp.type === 'income' ? '#10b981' : 'var(--text-primary)', flexShrink: 0 }}>
                   {exp.type === 'income' ? '+' : '-'}{formatCurrency(exp.amount)}
                 </div>
               </div>
