@@ -3,6 +3,8 @@ import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 
+import toast from 'react-hot-toast';
+
 const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -30,20 +32,26 @@ const Login = () => {
           localStorage.setItem('user', JSON.stringify(data.user)); // Store user info
           navigate('/');
         } else {
+          toast.error('Google login failed');
           console.error('Google login failed on backend:', data.error);
         }
       } catch (err) {
+        toast.error('Network error during login');
         console.error('Network error during Google login:', err);
       }
     },
-    onError: errorResponse => console.log('Google Login Error:', errorResponse),
+    onError: errorResponse => {
+      toast.error('Google Login Error');
+      console.log('Google Login Error:', errorResponse);
+    }
   });
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate email login for now, as we're focusing on Google Auth
-    localStorage.setItem('isAuthenticated', 'true');
-    navigate('/');
+    toast.error('Email login is currently disabled. Please use "Continue with Google".', {
+      duration: 4000,
+      icon: '🔒'
+    });
   };
 
   return (
