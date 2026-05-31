@@ -30,20 +30,8 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'User with this email already exists' });
     }
 
-    // 3. MX Record Validation (DNS Check)
-    const domain = email.split('@')[1];
-    if (!domain) {
-      return res.status(400).json({ error: 'Invalid email format' });
-    }
-
-    try {
-      const mxRecords = await resolveMx(domain);
-      if (!mxRecords || mxRecords.length === 0) {
-        return res.status(400).json({ error: 'Email domain does not exist or cannot receive emails' });
-      }
-    } catch (dnsError) {
-      return res.status(400).json({ error: 'Invalid email domain' });
-    }
+    // 3. Trim email
+    const cleanEmail = email.trim().toLowerCase();
 
     // 4. Generate 6-digit OTP
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -53,20 +41,20 @@ router.post('/register', async (req, res) => {
     const hashedOTP = await bcrypt.hash(otpCode, salt);
 
     // Delete any existing OTP for this email
-    await OTP.deleteMany({ email });
+    await OTP.deleteMany({ email: cleanEmail });
 
     // Save new OTP
     const otpDoc = new OTP({
-      email,
+      email: cleanEmail,
       otp: hashedOTP
     });
     await otpDoc.save();
 
     // 5. Send OTP Email
-    const emailSent = await sendOTPEmail(email, otpCode, name);
+    const emailSent = await sendOTPEmail(cleanEmail, otpCode, name);
     if (!emailSent) {
       // If email sending failed (e.g., wrong credentials in .env), we can log the OTP for testing purposes
-      console.log(`\n\n[DEV MODE] OTP for ${email} is: ${otpCode}\n\n`);
+      console.log(`\n\n[DEV MODE] OTP for ${cleanEmail} is: ${otpCode}\n\n`);
       // return res.status(500).json({ error: 'Failed to send verification email. Please try again.' });
     }
 
@@ -87,8 +75,10 @@ router.post('/verify-otp', async (req, res) => {
       return res.status(400).json({ error: 'All fields are required' });
     }
 
+    const cleanEmail = email.trim().toLowerCase();
+
     // Find the latest OTP for this email
-    const otpRecords = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
+    const otpRecords = await OTP.find({ email: cleanEmail }).sort({ createdAt: -1 }).limit(1);
     
     if (otpRecords.length === 0) {
       return res.status(400).json({ error: 'OTP has expired or was not requested. Please register again.' });
@@ -105,14 +95,14 @@ router.post('/verify-otp', async (req, res) => {
 
     const user = new User({
       name,
-      email,
+      email: cleanEmail,
       password: hashedPassword
     });
 
     await user.save();
 
     // Delete used OTPs
-    await OTP.deleteMany({ email });
+    await OTP.deleteMany({ email: cleanEmail });
 
     const jwtToken = jwt.sign(
       { id: user._id },
