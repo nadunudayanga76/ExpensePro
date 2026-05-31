@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'Smart Budget Tracker',
-        short_name: 'BudgetApp',
+        name: 'ExpensePro',
+        short_name: 'ExpensePro',
         description: 'Track your expenses, incomes, and wallets in one place.',
         theme_color: '#0f172a',
         background_color: '#0f172a',
